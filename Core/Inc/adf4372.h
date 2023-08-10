@@ -1,0 +1,470 @@
+/**_f
+ * @file    adf4372.h
+ * @author  Leon
+ * @version 0.1
+ * @date    2023.4.1
+ * @brief   ADF4372 SPI driver
+ */
+
+#ifndef __ADF4372_H
+#define __ADF4372_H
+
+#include "softspi.h"
+
+#define FLASH_USER_START_ADDR (FLASH_BASE+FLASH_PAGE_SIZE*128)
+
+#define REG_WRITE 1
+#define REG_READ 2
+#define REG_RESERVED 0
+
+#define REG_RESERVED_VALUE 0x00
+#define REG_VALUE_NOT_CARE 0x00
+
+#define ADF4372_REG_NUMBER 0x7d
+#define ADF4372_FREQ_REG_MAX 0x1f
+#define ADF4372_FREQ_REG_MIN 0x10
+
+// REG 0000
+
+#define SDO_ENABLE 0x18
+#define SDO_DISABLE 0x00
+
+#define ADDRESS_ASCENDING 0x24
+#define ADDRESS_DESENDING 0x00
+
+#define LSD_FIRST 0x42
+#define MSD_FIRST 0x00
+
+#define SOFT_RESET 0x81
+
+//REG 0001
+
+#define SINGLE_INSTRUCTION_MODE 0x80
+#define STREAM_MODE 0x00
+
+//REG 0010 & 0011
+
+#define INTEGER_WORD_DEFAULT_LSB 0x32
+#define INTEGER_WORD_DEFAULT_MSB 0x00
+
+//REG 0012 
+
+#define AUTOCALIBRATION_ENABLE 0x40
+#define AUTOCALIBRATION_DISABLE 0x00
+
+#define N_DIVIDER_PRESCALER_4_5 0x00
+#define N_DIVIDER_PRESCALER_8_9 0x20
+
+//REG 0014 & 0015 & 0016 &0017
+
+#define FRAC1WORD_BIT_7_0_DEFAULT 0x66
+#define FRAC1WORD_BIT_15_8_DEFAULT 0x66
+#define FRAC1WORD_BIT_23_16_DEFAULT 0x66
+#define FRAC1WORD_BIT_24_DEFAULT 0x01
+
+#define FRAC2WORD_BIT_6_0_DEFAULT 0x40
+#define FRAC2WORD_BIT_13_7_DEFAULT 0x1f
+
+//REG 0019
+
+#define MOD2WORD_7_0_DEFAULT 0x10
+
+//REG 001A
+
+#define PHASE_ADJUST_ENABLE 0x40
+#define PHASE_ADJUST_DISABLE 0x00
+
+#define MOD2WORD_13_8_DEFAULT 0x27
+
+//REG 001B & 001C & 001D
+
+#define PHASE_WORD_BIT_7_0_DEFAULT 0x00
+#define PHASE_WORD_BIT_15_8_DEFAULT 0x00
+#define PHASE_WORD_BIT_23_16_DEFAULT 0x00
+
+//REG 001E
+
+#define CP_CURRENT_0_35_MA 0x00
+#define CP_CURRENT_0_70_MA 0x10
+#define CP_CURRENT_1_05_MA 0x20
+#define CP_CURRENT_1_40_MA 0x30
+#define CP_CURRENT_1_75_MA 0x40
+#define CP_CURRENT_2_10_MA 0x50
+#define CP_CURRENT_2_45_MA 0x60
+#define CP_CURRENT_2_80_MA 0x70
+#define CP_CURRENT_3_15_MA 0x80
+#define CP_CURRENT_3_50_MA 0x90
+#define CP_CURRENT_3_85_MA 0xA0
+#define CP_CURRENT_4_20_MA 0xB0
+#define CP_CURRENT_4_55_MA 0xC0
+#define CP_CURRENT_4_90_MA 0xD0
+#define CP_CURRENT_5_25_MA 0xE0
+#define CP_CURRENT_5_60_MA 0xF0
+
+#define PD_POL_NEGATIVE 0x00
+#define PD_POL_POSITIVE 0x08
+
+#define POWER_DOWN 0x04
+
+#define CNTR_RESET 0x01
+
+//REG 001F
+
+#define R_WORD_32 0x00
+#define R_WORD_1 0x01
+#define R_WORD_2 0x02
+#define R_WORD_3 0x03
+#define R_WORD_4 0x04
+#define R_WORD_5 0x05
+#define R_WORD_6 0x06
+#define R_WORD_7 0x07
+#define R_WORD_8 0x08
+#define R_WORD_9 0x09
+#define R_WORD_10 0x0A
+#define R_WORD_11 0x0B
+#define R_WORD_12 0x0C
+#define R_WORD_13 0x0D
+#define R_WORD_14 0x0E
+#define R_WORD_15 0x0F
+#define R_WORD_16 0x10
+#define R_WORD_17 0x11
+#define R_WORD_18 0x12
+#define R_WORD_19 0x13
+#define R_WORD_20 0x14
+#define R_WORD_21 0x15
+#define R_WORD_22 0x16
+#define R_WORD_23 0x17
+#define R_WORD_24 0x18
+#define R_WORD_25 0x19
+#define R_WORD_26 0x1A
+#define R_WORD_27 0x1B
+#define R_WORD_28 0x1C
+#define R_WORD_29 0x1D
+#define R_WORD_30 0x1E
+#define R_WORD_31 0x1F
+
+//REG 0020
+
+#define MUXOUT_HIGH_Z 0x00
+#define MUXOUT_DIGITAL_LOCK_DETECT 0x10
+#define MUXOUT_CHARGE_PUMP_UP 0x20
+#define MUXOUT_CHARGE_PUMP_DOWN 0x30
+#define MUXOUT_R_DIVIDER_HALF 0x40
+#define MUXOUT_N_DIVIDER_HALF 0x50
+#define MUXOUT_VCO_TEST_MODES 0x60
+#define MUXOUT_RESERVED 0x70
+#define MUXOUT_HIGH 0x80
+#define MUXOUT_VCO_CALIBRATION_R_BAND_HALF 0x90
+#define MUXOUT_VCO_CALIBRATION_N_BAND_HALF 0xA0
+
+#define MUXOUT_AS_SDO 0x00
+#define MUXOUT_ENABLE 0x08
+
+#define MUXOUT_LEVEL_1V8 0x00
+#define MUXOUT_LEVEL_3V3 0x04
+
+//REG 0022
+
+#define REFIN_SINGLE_ENDED 0x00
+#define REFIN_DIFFERENTIAL 0x40
+
+#define REF_DOUBLER_ENABLE 0x20
+#define REF_DOUBLER_DISABLE 0x00
+
+#define REF_DIVIDED_BY_2_ENABLE 0x10
+#define REF_DIVIDED_BY_2_DISABLE 0x00
+
+//REG 0023
+
+#define TRACKING_FILTER_SET_AUTO 0x00
+#define TRACKING_FILTER_SET_MAMUAL 0x02
+
+//REG 0024
+
+#define N_COUNTER_DIVIDER_FEEDBACK 0x00
+#define N_COUNTER_FUNDAMENTAL_FEEDBACK 0x80
+
+#define RF_DIV_SEL_1 0x00
+#define RF_DIV_SEL_2 0x40
+#define RF_DIV_SEL_4 0x50
+#define RF_DIV_SEL_8 0x60
+#define RF_DIV_SEL_16 0x70
+#define RF_DIV_SEL_32 0x80
+#define RF_DIV_SEL_64 0x90
+
+
+//REG 0025
+
+#define RF_DIV_SEL_DOUBLE_BUFFERED 0x20
+
+#define RF_DOUBLER_OFF 0x00
+#define RF_DOUBLER_ON 0x08
+
+#define RF_8P_8N_ENABLE 0x04
+#define RF_8P_8N_DISABLE 0x00
+
+#define RF_OUT_POWER_NEGATIVE_4 0x00
+#define RF_OUT_POWER_NEGATIVE_1 0x01
+#define RF_OUT_POWER_2 0x02
+#define RF_OUT_POWER_5 0x03
+
+//REG 0026
+
+#define BLEED_CURRENT_DEFAULT 0x37
+
+//REG 0027
+
+#define LOCK_DETECT_BIAS_5_NS 0x00
+#define LOCK_DETECT_BIAS_6_NS 0x40
+#define LOCK_DETECT_BIAS_8_NS 0x80
+#define LOCK_DETECT_BIAS_12_NS 0xC0
+
+#define LOCK_DETECT_PRECISION_FRAC_MODE 0x00
+#define LOCK_DETECT_PRECISION_INT_MODE 0x20
+
+#define GATE_BLEED_ENABLE 0x10
+#define GATE_BLEED_DISABLE 0x00
+
+#define NEGATIVE_BLEED_ENABLE 0x08
+#define NEGATIVE_BLEED_DISABLE 0x00
+
+#define VCO_LDO_ENABLE 0x00
+#define VCO_LDO_DISABLE 0x04
+
+#define RF_PBS_RESERVED 0x01
+
+//REG 0028
+
+#define LOCK_DETECTOR_COUNT_1024_CYCLES 0x00
+#define LOCK_DETECTOR_COUNT_2048_CYCLES 0x02
+#define LOCK_DETECTOR_COUNT_4096_CYCLES 0x04
+#define LOCK_DETECTOR_COUNT_8192_CYCLES 0x06 
+
+#define LOSS_OF_LOCK_ENABLE 0x01
+#define LOSS_OF_LOCK_DISABLE 0x00
+
+//REG 002A
+
+#define NEGATIVE_BLEED 0x00
+#define POSITIVE_BLEED 0x20
+
+#define READBACK_DATA 0x00
+#define READBACK_DEVICE_VERSION_ID 0x01
+
+//REG 002B
+
+#define LSB_P1 0x20
+
+#define AUXILIARY_SDM_ENABLE 0x10
+#define AUXILIARY_SDM_DISABLE 0x00
+
+#define MASK_SD_RESET_ENABLE 0x04 //do not reset Σ-Δ when REG0010 is updated.
+#define MASK_SD_RESET_DISABLE 0x00 //reset Σ-Δ when REG0010 is updated.
+
+#define SD_ENABLE 0x00
+#define SD_DISABLE 0x01
+
+//REG 002C
+
+#define ALC_RECTIFIER_BIAS_VCO_3V3_CORE_D 0x00
+#define ALC_RECTIFIER_BIAS_VCO_5V_CORE_D 0x40
+
+#define ALC_THRESHOLD_VCO_3V3_CORE_D 0x20
+#define ALC_THRESHOLD_VCO_5V_CORE_D 0x00
+
+#define VCO_ALC_THRESHOLD_CORE_D 0x04
+
+#define TEMP_DEPENDENT_VCO_CALIBRATION_ENABLE 0x02
+#define TEMP_DEPENDENT_VCO_CALIBRATION_DISABLE 0x00
+
+#define ALC_ENABLE 0x00
+#define ALC_DISABLE 0x01
+
+//REG 002D
+
+#define ALC_RECTIFIER_BIAS_VCO_3V3_CORE_C 0x00
+#define ALC_RECTIFIER_BIAS_VCO_5V_CORE_C 0x10
+
+#define ALC_THRESHOLD_VCO_3V3_CORE_C 0x08
+#define ALC_THRESHOLD_VCO_5V_CORE_C 0x00
+
+#define VCO_ALC_THRESHOLD_VCO_5V_CORE_C 0x01
+#define VCO_ALC_THRESHOLD_VCO_3V3_CORE_C 0x02
+
+//REG 002E
+
+#define ALC_RECTIFIER_BIAS_VCO_3V3_CORE_B 0x00
+#define ALC_RECTIFIER_BIAS_VCO_5V_CORE_B 0x10
+
+#define ALC_THRESHOLD_VCO_3V3_CORE_B 0x08
+#define ALC_THRESHOLD_VCO_5V_CORE_B 0x00
+
+#define VCO_ALC_THRESHOLD_VCO_5V_CORE_B 0x00
+#define VCO_ALC_THRESHOLD_VCO_3V3_CORE_B 0x02
+
+//REG 002F
+
+#define LDO_VCO_3V3 0x00
+#define LDO_VCO_5V 0x80
+
+#define ALC_RECTIFIER_BIAS_VCO_3V3_CORE_A 0x00
+#define ALC_RECTIFIER_BIAS_VCO_5V_CORE_A 0x10
+
+#define ALC_THRESHOLD_VCO_3V3_CORE_A 0x08
+#define ALC_THRESHOLD_VCO_5V_CORE_A 0x00
+
+#define VCO_ALC_THRESHOLD_VCO_CORE_A 0x02
+
+//REG 0030
+
+#define VCO_BAND_DIV_DEFAULT 0x32
+
+//REG 0031
+
+#define TIMEOUT_BIT_7_0_DEFAULT 0xff
+
+//REG 0032
+
+#define ADC_INPUT_MUX_PTAT 0x00
+#define ADC_INPUT_MUX_VTUNE 0x80
+
+#define ADC_FAST_CONVERSION_ENABLE 0x20
+#define ADC_FAST_CONVERSION_DISABLE 0x00
+
+#define ADC_CONTINUOUS_CONVERSION_ENABLE 0x08
+#define ADC_CONTINUOUS_CONVERSION_DISABLE 0x00
+
+#define ADC_ENABLE 0x04
+#define ADC_DISABLE 0x00
+
+#define TIMEOUT_BIT_9_8_DEFAULT 0x01
+
+//REG 0033
+
+#define SYNTH_LOCK_TIMEOUT_DEFAULT 0x03
+
+//REG 0034
+
+#define VCO_FSM_TEST_MODES_DEFAULT 0x80
+
+#define VCO_ALC_TIMEOUT_DEFAULT 0x06
+
+//REG 0035
+
+#define ADC_CLK_DIVIDER_DEFAULT 0xf9
+
+//REG 0036
+
+#define ICP_ADJUST_OFFSET_RESERVED 0x30
+
+//REG 0037
+
+#define TEST_MODE_SELECT_BAND_IN_CORE_DEFAULT 0x00
+
+//REG 0038
+
+#define TEST_MODE_SELECT_CORE_DEFAULT 0x00
+
+#define TEST_MODE_SELECT_VCO_BIAS_DEFAULT 0x00
+
+//REG 0039
+
+#define TEST_MODE_VCO_MUX_BUSY 0x00
+#define TEST_MODE_VCO_MUX_N_BAND 0x10
+#define TEST_MODE_VCO_MUX_R_BAND 0x20 
+#define TEST_MODE_VCO_MUX_RESERVED 0x30
+#define TEST_MODE_VCO_MUX_TIMEOUT_CLOCK 0x40
+#define TEST_MODE_VCO_MUX_BIAS_MINIMUM 0x50
+#define TEST_MODE_VCO_MUX_ADC_BUSY 0x60
+#define TEST_MODE_VCO_MUX_LOGIC_LOW 0x70
+
+#define TEST_MODE_VCO_TARGET_VOLTAGE_DEFAULT 0x07
+
+//REG 003A
+
+#define ADC_OFFSET_DEFAULT 0x55
+
+//REG 003D
+
+#define SD_RESET_RESERVED 0x00
+
+//REG 003E
+
+#define CP_TEST_MODE_TRISTATE 0x00
+#define CP_TEST_MODE_NORMAL_OPERATION 0x0c
+
+//REG 003F & 0040 & 0041 & 0047 & 0052
+
+#define REG003F_RESERVED 0x80
+#define REG0040_RESERVED 0x50
+#define REG0041_RESERVED 0x28
+#define REG0047_RESERVED 0xc0
+#define REG0052_RESERVED 0xf4
+
+//REG 0070
+
+#define BAND_SEL_X2_DEFAULT 0x80
+#define BIAS_SEL_X2_DEFAULT 0x03
+
+//REG 0071 
+
+#define BAND_SEL_X4_NOT_USED 0x60
+#define BIAS_SEL_X4_NOT_USED 0x00
+
+//REG 0072
+
+#define AUX_FREQ_SEL_DEVIDED_OUTPUT 0x00
+#define AUX_FREQ_SEL_VCO_OUTPUT 0x40
+
+#define POUT_AUX_DEFAULT 0x00
+
+#define PDB_AUX_RF_OFF 0x00
+#define PDB_AUX_RF_ON 0x08
+
+#define COUPLED_VCO_RESERVED 0x02
+
+//REG 0073
+
+#define ADC_CLK_DISABLE 0x04
+
+#define POWER_DOWN_N_DIVIDER 0x02
+
+#define LOCK_DETECTOR_COUNT_DRIVER 0x01
+
+
+/**
+ * @brief  ADF4372 structure definition
+ */
+typedef struct
+{
+	SoftSPI_TypeDef *SoftSPIx;
+	uint8_t *adf4372_reg_type;
+	uint8_t *adf4372_reg_value;
+	double f_rfout;
+	uint32_t n_int;
+	uint32_t n_frac_1;
+	uint32_t n_frac_2;
+	uint32_t n_mod_1;
+	uint32_t n_mod_2;
+	
+} adf4372_type_def;
+
+void adf4372_init(adf4372_type_def *adf4372_x);
+
+/// @brief the update sequence must be as follows for fPFD <= 125 MHz
+/// @param adf4372_x adf4372 handler
+/// @param inte integer part of rf frequency
+/// @param frac frac part *100 of rf frequency
+void adf4372_update_freq(adf4372_type_def *adf4372_x,uint8_t rf_int,uint8_t rf_frac); 
+
+/// @brief the update sequence must be as follows for fPFD > 125 MHz:
+/// @param adf4372_x adf4372 handler
+void adf4372_update_freq_125_fpfd(adf4372_type_def *adf4372_x); 
+
+void adf4372_ace_init(adf4372_type_def *adf4372_x);
+
+void adf4372_ace_update_freq(adf4372_type_def *adf4372_x);
+
+void freq_write_flash(uint32_t rf_int,uint32_t rf_frac);
+
+#endif

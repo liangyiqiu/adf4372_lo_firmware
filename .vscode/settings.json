@@ -1,0 +1,12 @@
+{
+    "files.associations": {
+        "switch_control.h": "c",
+        "screen.h": "c",
+        "main.h": "c",
+        "stm32l0xx_hal.h": "c",
+        "stm32l0xx_hal_conf.h": "c",
+        "softspi.h": "c",
+        "adf4372.h": "c",
+        "softspi_conf.h": "c"
+    }
+}

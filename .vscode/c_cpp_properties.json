@@ -1,0 +1,29 @@
+{
+    "configurations": [
+        {
+            "name": "Win32",
+            "includePath": [
+                "C:/Keil_v5/ARM/ARMCLANG/include",
+                "${workspaceFolder}/**",
+                "Core/Inc",
+                "Drivers/STM32L0xx_HAL_Driver/Inc",
+                "Drivers/STM32L0xx_HAL_Driver/Inc/Legacy",
+                "Drivers/CMSIS/Device/ST/STM32L0xx/Include",
+                "Drivers/CMSIS/Include"
+            ],
+            "defines": [
+                "_DEBUG",
+                "UNICODE",
+                "_UNICODE",
+                "__CC_ARM",
+                "USE_HAL_DRIVER",
+                "STM32L031xx"
+            ],
+            "compilerPath": "C:/Keil_v5/ARM/ARMCLANG/bin/ARMCLANG.exe",
+            "cStandard": "c11",
+            "cppStandard": "c++17",
+            "intelliSenseMode": "gcc-x64"
+        }
+    ],
+    "version": 4
+}
